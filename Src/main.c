@@ -22,9 +22,35 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+#include <stddef.h>
+
+
+typedef union{
+
+	volatile uint32_t whole;
+	struct{
+		uint32_t PIN0 :2;
+		uint32_t PIN1 :2;
+		uint32_t PIN2 :2;
+		uint32_t PIN3 :2;
+		uint32_t PIN4 :2;
+		uint32_t PIN5 :2;
+		uint32_t PIN6 :2;
+		uint32_t PIN7 :2;
+		uint32_t PIN8 :2;
+		uint32_t PIN9 :2;
+		uint32_t PIN10 :2;
+		uint32_t PIN11 :2;
+		uint32_t PIN12 :2;
+		uint32_t PIN13 :2;
+		uint32_t PIN14 :2;
+		uint32_t PIN15 :2;
+	}bits;
+
+}MODER_t;
 
 typedef struct{
-	uint32_t volatile MODER;
+	volatile MODER_t MODER;
 	uint32_t volatile OTYPER;
 	uint32_t volatile OSPEEDR;
 	uint32_t volatile PUPDR;
@@ -33,6 +59,8 @@ typedef struct{
 	uint32_t volatile BSRR;
 	uint32_t volatile LCKR;
 }GPIO_Def;
+
+
 
 typedef struct{
 	uint32_t volatile RCC_CR;
@@ -58,11 +86,16 @@ typedef struct{
 #define GPIOA ((GPIO_Def*)0x40020000)
 #define RCC ((RCC_Def*)0x40023800)
 
+
 int main(void)
 {
+	volatile uint32_t s = sizeof(MODER_t);              // expect 4
+	volatile uint32_t o = offsetof(GPIO_Def, OTYPER);
+
 	RCC->RCC_AHB1ENR |= (1 << 0); // Set bit0 which is GPIOA clock enabled
-	GPIOA->MODER &= ~(3 << 10) ; // Set for Pin5 bit 10 ,11 to 00
-	GPIOA ->MODER |= (1 << 10); // Set for Pin5 bit 10 to 1
+//	GPIOA->MODER &= ~(3 << 10) ; // Set for Pin5 bit 10 ,11 to 00
+//	GPIOA ->MODER |= (1 << 10); // Set for Pin5 bit 10 to 1
+	GPIOA->MODER.bits.PIN5 = 1;
     /* Loop forever */
 	for(;;){
 		GPIOA->ODR ^= (1<<5);

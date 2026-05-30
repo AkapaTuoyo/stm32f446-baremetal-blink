@@ -71,4 +71,4 @@ a busy-wait delay
 - DS10693 — STM32F446xx datasheet
 
 ## Photo
-[LD2 blinking on Nucleo F446RE](docs/led_blinking.gif)
+![LD2 blinking on Nucleo F446RE](docs/led_blinking.gif)
